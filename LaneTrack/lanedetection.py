@@ -1,32 +1,26 @@
 import cv2
 import numpy as np
-import utlis # utlis.py
+import utlis
+
 
 class getCurveLane:
     def __init__(self):
         self.curveList = []
         self.avgVal = 10
-        # self.intialTrackBarVals = [103, 178, 63, 240]
         self.intialTrackBarVals = [74, 234, 18, 349]
+        utlis.initializeTrackbars(self.intialTrackBarVals)
 
     def getLaneCurve(self,img,display=2):
-        img = cv2.resize(img, (640, 360))
         imgCopy = img.copy()
         imgResult = img.copy()
+
         #### step1
-        # : 1) BRG -> HSV / 2) 이진(black/white) 변환
         imgThres = utlis.thresholding(img)
 
         #### step2
-        hT, wT, c = img.shape # height, width, channel(rgb면 3)
-        # ROI 값 지정 (사각형 모양)
-        # : Width Top, Height Top, Width Bottom, Height Bottom
+        hT, wT, c = img.shape
         points = utlis.valTrackbars()
-        # bird eye view로 전환
-        # 워프된 이미지로 출력할 것이면 아래 코드 사용 (첫 번째 인자로 imgThres를 전달)
         imgWarp = utlis.warpImg(imgThres,points,wT,hT)
-        # 원본(워프 안 돼있음) 이미지에 ROI(관심영역)의 4개 좌표에 원을 그림
-        # points 찾을 때는 원본 이미지(의 카피본)를 보냄
         imgWarpPoints = utlis.drawPoints(imgCopy,points)
 
         #### step3
@@ -48,7 +42,7 @@ class getCurveLane:
             imgLaneColor = np.zeros_like(img)
             imgLaneColor[:] = 0, 255, 0
             imgLaneColor = cv2.bitwise_and(imgInvWarp, imgLaneColor)
-            imgResult = cv2.addWeighted(imgResult, 1, imgLaneColor, 1, 0)
+            imgResult = cv2.addWeighted(imgResult, 0.8, imgLaneColor, 1, 0)
             midY = 450
             cv2.putText(imgResult, str(curve), (wT // 2 - 80, 85), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 255), 3)
             cv2.line(imgResult, (wT // 2, midY), (wT // 2 + (curve * 3), midY), (255, 0, 255), 5)
@@ -65,43 +59,10 @@ class getCurveLane:
             cv2.imshow('ImageStack', imgStacked)
         elif display == 1:
             cv2.imshow('Resutlt', imgResult)
-        
-        # cv2.imshow('Warp Points', imgWarpPoints)
-        # cv2.imshow('Thres', imgThres)
-        # cv2.imshow('Thres', imgThres)
-        # cv2.imshow('Warp', imgWarp)
+
+    #    cv2.imshow('Thres', imgThres)
+    #    cv2.imshow('Warp', imgWarp)
         cv2.imshow('Warp Points', imgWarpPoints)
-        # cv2.imshow('Histogram', imgHist)
+    #    cv2.imshow('Histogram', imgHist)
 
-        # cv2.imshow('Warp', imgt Speed :")
-        # cv2.imsho
-        # cv2.imshow('Warp', imgWarp)
-        # cv2.imshow('Warp', imgWarp)w('Warp', imgWarp)
         return curve
-
-# if __name__ == '__main__':
-#     cap = cv2.VideoCapture('vid1.mp4')
-
-#     # TrackBar의 initial values
-#     # ROI(Region Of Interest)의 초기값 설정
-#     # [Width Top, Height Top, Width Bottom, Height Bottom]
-#     
-
-#     ## 트랙바 띄우기 -> 성민 요청으로 트랙바 삭제하고 값만 남김
-#     #utlis.initializeTrackbars(intialTrackBarVals)
-    
-#     frameCounter = 0 # 프레임 수 카운트
-
-#     while True:
-#         frameCounter += 1
-#         if cap.get(cv2.CAP_PROP_FRAME_COUNT) == frameCounter:
-#             cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
-#             frameCounter = 0
-#         success, img = cap.read() # GET THE IMAGE
-#         # 프레임
-#         img = cv2.resize(img, (480, 240))
-#         # print(getLaneCurve(img))
-#         Mid_point, Real_Coor1 = getLaneCurve(img, display=1)
-#         print('Area     : {}    Mid_Point : {}'.format(Real_Coor1, Mid_point))
-#         cv2.imshow('Vid', img)
-#         cv2.waitKey(1)

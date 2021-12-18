@@ -25,12 +25,12 @@ class updateSteer:
         self.steerJson['speed']=updated_speed
 
     def calDir(self,point):
-        if abs(point)<20:
+        if abs(point)<3:
             dir='c'
         elif point>0:
-            dir='l'
-        else :
             dir='r'
+        else :
+            dir='l'
         self.steerJson['dir']=dir
 
     def getSteerData(self):
@@ -57,6 +57,7 @@ class getVideoServer():
         while True:
             speed=input("Default Speed :")
             self.steer.setDefSpeed(int(speed))
+            time.sleep(0.1)
 
     def socketClose(self):
         self.sock.close()
@@ -71,29 +72,32 @@ class getVideoServer():
         print(u'Server socket [ TCP_IP: ' + self.TCP_IP + ', TCP_PORT: ' + str(self.TCP_PORT) + ' ] is connected with client')
 
     def receiveImages(self):
-        try:
-            while True:
-                # length = self.recvall(self.conn, 64)
-                length=self.conn.recv(64)
-                length1 = length.decode('utf-8')
-                stringData = self.recvall(self.conn, int(length1))
-                data = numpy.frombuffer(base64.b64decode(stringData), numpy.uint8)
-                decimg = cv2.imdecode(data, 1)
-                cv2.resize(decimg,(1280,720))
-                res=self.getLane.getLaneCurve(decimg)
-                BASE_CENTER=614
-                self.steer.calDir(res)
-                self.steerData=self.steer.getSteerData()
-                # print(self.steerData)
-                # cv2.imshow("image", decimg)
-                # cv2.waitKey(1)
+        # try:
+        while True:
+            # length = self.recvall(self.conn, 64)
+            length=self.conn.recv(64)
+            length1 = length.decode('utf-8')
+            stringData = self.recvall(self.conn, int(length1))
+            data = numpy.frombuffer(base64.b64decode(stringData), numpy.uint8)
+            decimg = cv2.imdecode(data, 1)
+            decimg=cv2.resize(decimg,(480,240))
+            decimg=cv2.flip(decimg,0)
+            # decimg=cv2.flip(decimg,1)
+            cv2.imshow("image", decimg)
+            cv2.waitKey(1)
+            res=self.getLane.getLaneCurve(decimg)
+            BASE_CENTER=614
+            self.steer.calDir(res)
+            self.steerData=self.steer.getSteerData()
+            # self.conn.send(json.dumps(self.steerData).encode('utf-8').ljust(64))
+            # print(self.steerData)
 
-        except Exception as e:
-            print(e)
-            self.handleError(e)
-            # self.sendThread.
-            sys.exit()
-            # self.receiveImages()
+        # except Exception as e:
+        #     print(e)
+        #     self.handleError(e)
+        #     # self.sendThread.
+        #     sys.exit()
+        #     # self.receiveImages()
 
     def sendData(self):
         # try:
@@ -101,7 +105,7 @@ class getVideoServer():
             # print(json.dumps(self.steerData).encode('utf-8').ljust(64))
             self.conn.send(json.dumps(self.steerData).encode('utf-8').ljust(64))
             # self.sock.send(str(1234).encode('utf-8').ljust(64))
-            time.sleep(0.09)
+            time.sleep(0.35)
 
         # except Exception as e:
         #     print(e)
