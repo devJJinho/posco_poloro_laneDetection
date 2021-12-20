@@ -10,9 +10,11 @@ class getCurveLane:
         self.intialTrackBarVals = [74, 234, 18, 349]
 
     def getLaneCurve(self,img,display=2):
-        img = cv2.resize(img, (640, 360))
+        # img = cv2.resize(img, (640, 360))
         imgCopy = img.copy()
+        # imgCopy=255-imgCopy
         imgResult = img.copy()
+        # imgResult=255-imgCopy
         #### step1
         # : 1) BRG -> HSV / 2) 이진(black/white) 변환
         imgThres = utlis.thresholding(img)
@@ -51,6 +53,7 @@ class getCurveLane:
             imgResult = cv2.addWeighted(imgResult, 1, imgLaneColor, 1, 0)
             midY = 450
             cv2.putText(imgResult, str(curve), (wT // 2 - 80, 85), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 255), 3)
+            cv2.putText(imgResult, str(middlePoint), (wT // 2 - 80, 35), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 255), 3)
             cv2.line(imgResult, (wT // 2, midY), (wT // 2 + (curve * 3), midY), (255, 0, 255), 5)
             cv2.line(imgResult, ((wT // 2 + (curve * 3)), midY - 25), (wT // 2 + (curve * 3), midY + 25), (0, 255, 0), 5)
             for x in range(-30, 30):
@@ -77,7 +80,7 @@ class getCurveLane:
         # cv2.imsho
         # cv2.imshow('Warp', imgWarp)
         # cv2.imshow('Warp', imgWarp)w('Warp', imgWarp)
-        return curve
+        return middlePoint,curve
 
 # if __name__ == '__main__':
 #     cap = cv2.VideoCapture('vid1.mp4')

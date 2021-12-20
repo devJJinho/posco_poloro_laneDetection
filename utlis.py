@@ -13,8 +13,37 @@ def thresholding(img):
     # lowerWhite보다 낮으면 black으로 변환 / 높으면 white로 변환
 
     # BGR 컬러 공간
-    lowerWhite = np.array([100,100,100])
-    upperWhite = np.array([220,220,255])
+    #lowerWhite = np.array([100,100,100])
+    #upperWhite = np.array([220,220,255])
+    # cam 교체 전
+    # lowerWhite = np.array([110,110,130])
+    # upperWhite = np.array([225,225,240])
+    # 1차
+    # lowerWhite = np.array([110,120,100])
+    # upperWhite = np.array([230,240,220])
+    # 2차
+    # lowerWhite = np.array([192,192,192])
+    # upperWhite = np.array([255,255,255])
+
+    # 3차
+    # lowerWhite = np.array([150,150,140])
+    # upperWhite = np.array([215,215,195])
+    # 4차
+    # lowerWhite = np.array([180,180,170])
+    # upperWhite = np.array([225,225,215])
+    # lowerWhite = np.array([195,162,160])
+    # upperWhite = np.array([240,220,205])
+    # lowerWhite = np.array([200,167,165])
+    # upperWhite = np.array([240,220,205])
+
+    lowerWhite = np.array([203,150,173])
+    upperWhite = np.array([245,225,215])
+    
+
+    #lowerWhite = np.array([190,185,185])
+    #upperWhite = np.array([230,220,215])
+    # 5차
+
     maskWhite = cv2.inRange(img,lowerWhite,upperWhite)
     return maskWhite
 
@@ -62,10 +91,10 @@ def valTrackbars(wT=640, hT=360):
     # heightBottom = cv2.getTrackbarPos("Height Bottom", "Trackbars")
 
     # 103, 178, 63, 240
-    widthTop = 125
-    heightTop = 234
-    widthBottom = 18 # 55
-    heightBottom = 349
+    widthTop = 70
+    heightTop = 200
+    widthBottom = 10 # 55
+    heightBottom = 360
 
     # pts2 = np.float([[0,0],[w,0],[0,h],[w,h]]) -> 이거 같은 느낌
     points = np.float32([(widthTop, heightTop), (wT-widthTop, heightTop),
