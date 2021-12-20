@@ -5,8 +5,6 @@ import threading
 import cv2
 import json
 import time
-# from laneDetection import imageProcessing
-# from origin_lane import imageProcessing
 from lanedetection import getCurveLane
 import sys
 import warnings
@@ -101,11 +99,6 @@ class getVideoServer():
             s[data[0]] = data[1:46081]
             isGet[data[0]]=True
 
-            # isAllget=True
-            # for i in range(15):
-            #     if not isGet[i]:
-            #         isAllget=False
-            
             if data[0]==14:
                 for i in range(15):
                     picture+=s[i]
@@ -115,58 +108,25 @@ class getVideoServer():
                 BASE_CENTER=320
                 self.steer.calDir(middle,curve,BASE_CENTER)
                 self.steerData=self.steer.getSteerData()
-                # isGet=[False for x in range(15)]
-                # self.sock.sendto(json.dumps(self.steerData).encode('utf-8').ljust(64),addr)
                 cv2.imshow('window',frame)
                 cv2.waitKey(1)
-        
-            # length=self.conn.recv(64)
-            # length1 = length.decode('utf-8')
-            # stringData = self.recvall(self.conn, int(length1))
-            # data = numpy.frombuffer(base64.b64decode(stringData), numpy.uint8)
-            # decimg = cv2.imdecode(data, 1)
-            # # decimg=cv2.resize(decimg,(640,360))
-            # decimg=cv2.flip(decimg,0)
-            # # decimg=cv2.flip(decimg,1)
-            # cv2.imshow("image", decimg)
-            # cv2.waitKey(1)
-            # res=self.getLane.getLaneCurve(decimg)
-            # BASE_CENTER=614
-            # self.steer.calDir(res)
-            # self.steerData=self.steer.getSteerData()
-            # # self.conn.send(json.dumps(self.steerData).encode('utf-8').ljust(64))
-            # # print(self.steerData)
 
         # except Exception as e:
         #     print(e)
         #     self.handleError(e)
-        #     # self.sendThread.
-        #     sys.exit()
-        #     # self.receiveImages()
+
 
     def sendData(self):
         # try:
         while True:
             if self.client_addr==None:
                 continue
-            # print(json.dumps(self.steerData).encode('utf-8').ljust(64))
             self.sock.sendto(json.dumps(self.steerData).encode('utf-8').ljust(64),self.client_addr)
-            # self.sock.send(str(1234).encode('utf-8').ljust(64))
             time.sleep(0.1)
 
         # except Exception as e:
         #     print(e)
         #     self.handleError(e)
-        #     # self.sendData()
-
-    # def recvall(self, sock, count):
-    #     buf = b''
-    #     while count:
-    #         newbuf = sock.recv(count)
-    #         if not newbuf: return None
-    #         buf += newbuf
-    #         count -= len(newbuf)
-    #     return buf
 
     def handleError(self,e):
         print(e)
