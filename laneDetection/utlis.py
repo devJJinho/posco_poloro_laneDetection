@@ -36,8 +36,8 @@ def thresholding(img):
     # lowerWhite = np.array([200,167,165])
     # upperWhite = np.array([240,220,205])
 
-    lowerWhite = np.array([203,150,173])
-    upperWhite = np.array([245,225,215])
+    lowerWhite = np.array([155,155,155])
+    upperWhite = np.array([255,255,255])
     
 
     #lowerWhite = np.array([190,185,185])
@@ -91,8 +91,9 @@ def valTrackbars(wT=640, hT=360):
     # heightBottom = cv2.getTrackbarPos("Height Bottom", "Trackbars")
 
     # 103, 178, 63, 240
+    # 원본 70 200 10 360
     widthTop = 70
-    heightTop = 200
+    heightTop = 250
     widthBottom = 10 # 55
     heightBottom = 360
 
