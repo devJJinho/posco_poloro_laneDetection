@@ -15,7 +15,8 @@ class updateSteer:
         self.steerJson['def_speed']=def_speed
         self.steerJson['dir']='c'
         self.steerJson['speed']=1
-  
+        self.steerJson['angle']=1
+
     def setDefSpeed(self,updated_speed):
         self.steerJson['def_speed']=updated_speed
     
@@ -29,7 +30,11 @@ class updateSteer:
             dir='l'
         else :
             dir='r'
-        return dir
+        if abs(point-basePoint)>80:
+            angle=5
+        else:
+            angle=(abs(point-basePoint)//20)+1
+        return dir,angle
 
     def goCenterByCurve(self,curve):
         if abs(curve)>5:
@@ -51,8 +56,10 @@ class updateSteer:
         #         dir=self.goCenterByCurve(curve)
 
         # self.steerJson['dir']=dir
-        dir=self.goCenterByPoint(point,basePoint)
+        dir,angle=self.goCenterByPoint(point,basePoint)
         self.steerJson['dir']=dir
+        self.steerJson['angle']=angle
+
 
     def getSteerData(self):
         return self.steerJson
